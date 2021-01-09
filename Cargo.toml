@@ -5,7 +5,7 @@ edition = "2018"
 
 authors = ["dmixn <dmixn@yandex.ru>"]
 description = "Synchronous encryption algorithm \"Kuznechik\" (GOST R 34.12-2015, GOST R 34.13-2015)"
-license = "GNU LGPL v2.1"
+license = "LGPL-2.1-or-later"
 repository = "https://github.com/DmitryNX/Kuznechik"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
