@@ -70,20 +70,6 @@ fn tfm_s(data: &mut Block128) {
     }
 }
 
-/// Конечное поле GF(2)[x]∕p(x), где p(x) = x8 + x7 + x6 + x + 1 ∈ GF(2)[x]
-/// Определим линейное преобразование ℓ : V816 → V8 и сдвинем полученную
-/// 16 байтную последовательность на 1 байт в сторону младшего разряда.
-#[inline]
-fn tfm_r(data: &mut Block128) {
-    let mut temp = 0u8;
-    for i in 0..16 {
-        temp ^= MULT_TABLE[(data[i] as usize * 256 + K_B[i] as usize) as usize];
-    }
-
-    data.rotate_right(1);
-    data[0] = temp;
-}
-
 /// Преобразование L состоит в последовательной записи в старший разряд
 /// результата R преобразования и сдвига влево на 1 символ.
 /// Выполнив такой сдвиг 16 раз на выходе этого преобразования
@@ -93,6 +79,39 @@ fn tfm_l(data: &mut Block128) {
     for _ in 0..16 {
         tfm_r(data);
     }
+}
+
+/// Конечное поле GF(2)[x]∕p(x), где p(x) = x8 + x7 + x6 + x + 1 ∈ GF(2)[x]
+/// Определим линейное преобразование ℓ : V816 → V8 и сдвинем полученную
+/// 16 байтную последовательность на 1 байт в сторону младшего разряда.
+#[inline]
+fn tfm_r(data: &mut Block128) {
+    let temp = trf_linear(data);
+    data.rotate_right(1);
+    data[0] = temp;
+}
+
+#[inline]
+fn trf_linear(data: &Block128) -> u8 {
+    // indexes: 16, 32, 133, 148, 192, 194, 251
+    let mut res = 0u8;
+    res ^= MULT_TABLE[3][data[0] as usize];
+    res ^= MULT_TABLE[1][data[1] as usize];
+    res ^= MULT_TABLE[2][data[2] as usize];
+    res ^= MULT_TABLE[0][data[3] as usize];
+    res ^= MULT_TABLE[5][data[4] as usize];
+    res ^= MULT_TABLE[4][data[5] as usize];
+    res ^= data[6];
+    res ^= MULT_TABLE[6][data[7] as usize];
+    res ^= data[8];
+    res ^= MULT_TABLE[4][data[9] as usize];
+    res ^= MULT_TABLE[5][data[10] as usize];
+    res ^= MULT_TABLE[0][data[11] as usize];
+    res ^= MULT_TABLE[2][data[12] as usize];
+    res ^= MULT_TABLE[1][data[13] as usize];
+    res ^= MULT_TABLE[3][data[14] as usize];
+    res ^= data[15];
+    res
 }
 
 #[inline]
@@ -106,11 +125,7 @@ fn tfm_rev_s(data: &mut Block128) {
 #[inline]
 fn tfm_rev_r(data: &mut Block128) {
     data.rotate_left(1);
-    let mut sum: u8 = 0;        // результат умножения в поле F
-    for i in 0..16 {
-        sum ^= MULT_TABLE[data[i] as usize * 256 + K_B[i] as usize];
-    }
-    data[15] = sum;
+    data[15] = trf_linear(data);
 }
 
 /// Обратное преобразование L
@@ -165,7 +180,7 @@ pub fn addition_rev_block_2(data: &mut Vec<u8>) {
 // ------------------------------------ TESTS ------------------------------------
 
 #[test]
-fn transform_s() {
+fn test_transform_s() {
     let mut data = [0xff, 0xee, 0xdd, 0xcc, 0xbb, 0xaa, 0x99, 0x88, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x00];
 
     tfm_s(&mut data);
@@ -182,7 +197,7 @@ fn transform_s() {
 }
 
 #[test]
-fn transform_r() {
+fn test_transform_r() {
     let mut data = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00];
 
     tfm_r(&mut data);
@@ -199,7 +214,7 @@ fn transform_r() {
 }
 
 #[test]
-fn transform_l() {
+fn test_transform_l() {
     let mut data = [0x64, 0xa5, 0x94, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
     tfm_l(&mut data);
