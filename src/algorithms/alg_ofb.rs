@@ -1,22 +1,26 @@
-use super::Algorithm;
-use crate::Kuznechik;
+use super::Kuznechik;
+use crate::KeyStore;
 use crate::types::{Block128, mut_cast_unchecked};
 use crate::transforms::{sum_mod_2, encrypt_block};
 use std::convert::TryInto;
 
 
 pub struct AlgOfb<'k> {
-    kuz: &'k Kuznechik,
-    pub gamma: Vec<u8>,
+    kuz: &'k KeyStore,
+    gamma: Vec<u8>,
 }
 
-impl<'k> Algorithm<'k> for AlgOfb<'k> {
-    fn new(kuz: &'k Kuznechik) -> Self {
+impl<'k> Kuznechik<'k> for AlgOfb<'k> {
+    fn new(kuz: &'k KeyStore) -> Self {
         // let mut gamma = Vec::with_capacity(64);
         // assert!(gamma.len() >= 16);
         // gamma = vec![ 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0f, 0x0e,
         //               0x10, 0x10, 0x20, 0x30, 0x40, 0x50, 0x60, 0x70, 0x80, 0x90, 0xa0, 0xb0, 0xc0, 0xd0, 0xf0, 0xe0 ];
         AlgOfb { kuz, gamma: vec![] }
+    }
+
+    fn set_gamma(&mut self, gamma: Vec<u8>) {
+        self.gamma = gamma
     }
 
     fn encrypt(&mut self, mut data: Vec<u8>) -> Vec<u8> {

@@ -1,18 +1,18 @@
-use super::Algorithm;
-use crate::Kuznechik;
+use super::Kuznechik;
+use crate::KeyStore;
 use crate::types::Block128;
 use crate::transforms::{sum_mod_2, encrypt_block};
 use std::convert::TryInto;
 
 pub struct AlgMac<'k> {
-    kuz: &'k Kuznechik,
+    kuz: &'k KeyStore,
     s: usize,
     k1: Block128,
     k2: Block128
 }
 
-impl<'k> Algorithm<'k> for AlgMac<'k> {
-    fn new(kuz: &'k Kuznechik) -> Self {
+impl<'k> Kuznechik<'k> for AlgMac<'k> {
+    fn new(kuz: &'k KeyStore) -> Self {
         let mut a = AlgMac {
             kuz,
             s: 8,
@@ -22,6 +22,8 @@ impl<'k> Algorithm<'k> for AlgMac<'k> {
         a.make_k();
         a
     }
+
+    fn set_gamma(&mut self, _gamma: Vec<u8>) { }
 
     fn encrypt(&mut self, mut data: Vec<u8>) -> Vec<u8> {
         let is_added = addition_block128_3(&mut data, 16);

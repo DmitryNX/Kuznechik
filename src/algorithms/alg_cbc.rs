@@ -1,18 +1,22 @@
-use super::Algorithm;
-use crate::Kuznechik;
+use super::Kuznechik;
+use crate::KeyStore;
 use crate::types::{Block128, mut_cast_unchecked};
 use crate::transforms::{addition_block128_2, sum_mod_2, addition_rev_block_2, encrypt_block, decrypt_block};
 
 pub struct AlgCbc<'k> {
-    kuz: &'k Kuznechik,
-    pub gamma: Vec<u8>
+    kuz: &'k KeyStore,
+    gamma: Vec<u8>
 }
 
-impl<'k> Algorithm<'k> for AlgCbc<'k> {
-    fn new(kuz: &'k Kuznechik) -> Self {
+impl<'k> Kuznechik<'k> for AlgCbc<'k> {
+    fn new(kuz: &'k KeyStore) -> Self {
         AlgCbc {
-            kuz, gamma: vec![]
+            kuz, gamma: Vec::new()
         }
+    }
+
+    fn set_gamma(&mut self, gamma: Vec<u8>) {
+        self.gamma = gamma
     }
 
     fn encrypt(&mut self, mut data: Vec<u8>) -> Vec<u8> {
