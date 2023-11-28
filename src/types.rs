@@ -10,7 +10,7 @@ impl Array for Block128 {
 }
 
 #[inline]
-pub fn mut_cast_unchecked<T: Array>(slice: &mut [T::Item]) -> &mut T {
+pub(crate) fn mut_cast_unchecked<T: Array>(slice: &mut [T::Item]) -> &mut T {
     unsafe {
         &mut *(slice.as_mut_ptr() as *mut T)
     }

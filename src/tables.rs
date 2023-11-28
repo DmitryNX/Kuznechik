@@ -1,5 +1,5 @@
-﻿/// Нелинейное биективное преобразование множества двоичных векторов
-pub const K_PI : [u8; 256] = [
+﻿/// Nonlinear bijective transformation of set binary vectors
+pub(crate) const K_PI : [u8; 256] = [
 	252, 238, 221, 17, 207, 110, 49, 22, 251, 196, 250, 218, 35, 197, 4, 77,
 	233, 119, 240, 219, 147, 46, 153, 186, 23, 54, 241, 187, 20, 205, 95, 193,
 	249, 24, 101, 90, 226, 92, 239, 33, 129, 28, 60, 66, 139, 1, 142, 79, 5,
@@ -19,8 +19,8 @@ pub const K_PI : [u8; 256] = [
 ];
 
 
-/// Обратное нелинейное биективное преобразование множества двоичных векторов
-pub const K_PI_REV: [u8; 256] = [
+/// Inverse nonlinear bijective transformation using dual vectors
+pub(crate) const K_PI_REV: [u8; 256] = [
 	0xa5, 0x2d, 0x32, 0x8f, 0x0e, 0x30, 0x38, 0xc0, 0x54, 0xe6, 0x9e, 0x39,
 	0x55, 0x7e, 0x52, 0x91, 0x64, 0x03, 0x57, 0x5a, 0x1c, 0x60, 0x07, 0x18,
 	0x21, 0x72, 0xa8, 0xd1, 0x29, 0xc6, 0xa4, 0x3f, 0xe0, 0x27, 0x8d, 0x0c,
@@ -45,8 +45,8 @@ pub const K_PI_REV: [u8; 256] = [
 	0x00, 0x4c, 0xd7, 0x74 
 ];
 
-/// Таблица умножения
-pub const MULT_TABLE: [[u8; 256]; 7] = [
+/// Multiply table
+pub(crate) const MULT_TABLE: [[u8; 256]; 7] = [
 /* 16 */ [
 		0x00,   0x10,   0x20,   0x30,   0x40,   0x50,   0x60,   0x70,
 		0x80,   0x90,   0xa0,   0xb0,   0xc0,   0xd0,   0xe0,   0xf0,
