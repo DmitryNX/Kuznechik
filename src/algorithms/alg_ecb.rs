@@ -1,7 +1,7 @@
 use super::Kuznechik;
-use crate::KeyStore;
 use crate::types::mut_cast_unchecked;
 use crate::transforms::{addition_block128_2, addition_rev_block_2, encrypt_block, decrypt_block};
+use crate::key_store::KeyStore;
 
 pub struct AlgEcb<'k> {
     kuz: &'k KeyStore

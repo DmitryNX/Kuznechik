@@ -1,8 +1,8 @@
 use super::Kuznechik;
-use crate::KeyStore;
 use crate::types::{Block128, mut_cast_unchecked};
 use crate::transforms::{sum_mod_2, encrypt_block};
 use std::convert::TryInto;
+use crate::key_store::KeyStore;
 
 
 pub struct AlgOfb<'k> {
